@@ -65,7 +65,7 @@ const Pricing = () => {
                 Premium
               </span>
               <h2 className="space-x-2 text-6xl">
-                <span className="font-extrabold">$9</span>
+                <span className="font-extrabold">$90</span>
                 <small className="text-lg text-gray-400">per month</small>
               </h2>
             </div>
