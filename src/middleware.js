@@ -1,11 +1,25 @@
 import { NextResponse } from 'next/server';
 
 const middleware = (req) => {
-  const { host } = new URL(process.env.APP_URL);
+  if (!process.env.APP_URL) {
+    console.error('APP_URL is not defined in environment variables.');
+    return NextResponse.next();
+  }
+
+  let host;
+  try {
+    ({ host } = new URL(process.env.APP_URL));
+  } catch (err) {
+    console.error('Invalid APP_URL:', process.env.APP_URL);
+    return NextResponse.next();
+  }
+
   const url = req.nextUrl.clone();
   const { pathname } = req.nextUrl;
-  const hostname = req.headers.get('host');
+  const hostname = req.headers.get('host') || '';
+
   const currentHost = hostname.replace(`.${host}`, '');
+
   if (pathname.startsWith(`/_sites`)) {
     return new Response(null, { status: 404 });
   }
@@ -19,6 +33,8 @@ const middleware = (req) => {
 
     return NextResponse.rewrite(url);
   }
+
+  return NextResponse.next();
 };
 
 export default middleware;
