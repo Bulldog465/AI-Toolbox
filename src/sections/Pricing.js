@@ -25,8 +25,8 @@ const Pricing = () => {
                 Hobby
               </span>
               <h2 className="space-x-2 text-6xl">
-                <span className="font-extrabold">Free</span>
-                <small className="text-lg text-gray-400">for life!</small>
+                <span className="font-extrabold">$25</span>
+                <small className="text-lg text-gray-400">per month</small>
               </h2>
             </div>
             <div className="flex flex-col w-full h-full p-10 space-y-5 bg-gray-100 border-t">
