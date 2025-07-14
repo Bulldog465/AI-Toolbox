@@ -1,13 +1,15 @@
+// lib/server/auth.js
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import EmailProvider from 'next-auth/providers/email';
-
 import prisma from '@/prisma/index';
-import { html, text } from '@/config/email-templates/signin';
-import { emailConfig, sendMail } from '@/lib/server/mail';
-import { createPaymentAccount, getPayment } from '@/prisma/services/customer';
+import { sendMail } from '@/lib/server/mail';  // Import sendMail function
+import { html, text } from '@/config/email-templates/signin';  // Use your HTML and text email templates
 
 export const authOptions = {
+  // Prisma Adapter for user management
   adapter: PrismaAdapter(prisma),
+
+  // Callbacks for session management
   callbacks: {
     session: async ({ session, user }) => {
       if (session.user) {
@@ -22,7 +24,11 @@ export const authOptions = {
       return session;
     },
   },
+
+  // Debugging in non-production environments
   debug: !(process.env.NODE_ENV === 'production'),
+
+  // Events triggered on certain actions (e.g., on sign-in)
   events: {
     signIn: async ({ user, isNewUser }) => {
       const customerPayment = await getPayment(user.email);
@@ -32,22 +38,31 @@ export const authOptions = {
       }
     },
   },
+
+  // Providers array for authentication
   providers: [
     EmailProvider({
-      from: process.env.EMAIL_FROM,
-      server: emailConfig,
+      from: process.env.EMAIL_FROM,  // Sender email
+      server: emailServiceConfig,  // Your SMTP server details from .env
       sendVerificationRequest: async ({ identifier: email, url }) => {
         const { host } = new URL(url);
+
+        // Use your existing sendMail function to send the magic link email
         await sendMail({
-          html: html({ email, url }),
+          from: process.env.EMAIL_FROM,  // Use the email address from environment
+          to: email,  // Recipient email
           subject: `[Nextacular] Sign in to ${host}`,
-          text: text({ email, url }),
-          to: email,
+          text: text({ email, url }),  // Use your text template
+          html: html({ email, url }),  // Use your HTML template
         });
       },
     }),
   ],
+
+  // Secret for NextAuth session management
   secret: process.env.NEXTAUTH_SECRET || null,
+
+  // Session configuration using JWT
   session: {
     jwt: true,
   },
