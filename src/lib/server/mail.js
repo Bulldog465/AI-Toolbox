@@ -1,32 +1,30 @@
 import nodemailer from 'nodemailer';
 
-// Define email configuration using environment variables
 export const emailConfig = {
   auth: {
-    user: process.env.EMAIL_SERVER_USER,  // Use environment variable for email user
-    pass: process.env.EMAIL_SERVER_PASSWORD,  // Use environment variable for password
+    user: process.env.EMAIL_SERVER_USER,
+    pass: process.env.EMAIL_SERVER_PASSWORD,
   },
-  service: process.env.EMAIL_SERVICE,  // Use environment variable for email service (e.g., smtp.gmail.com)
+  service: process.env.EMAIL_SERVICE,
+  port: process.env.EMAIL_PORT,  // Add port configuration for Gmail
 };
 
-// Create the transporter using the defined configuration
 const transporter = nodemailer.createTransport(emailConfig);
 
-// Function to send an email
 export const sendMail = async ({ from, html, subject, text, to }) => {
   const data = {
-    from: from ?? process.env.EMAIL_FROM,  // Use email from environment variable if 'from' is not provided
+    from: from ?? process.env.EMAIL_FROM,  // Default to EMAIL_FROM from .env
     to,
     subject,
     text,
     html,
   };
 
-  // Only send the email in production environment
+  // In production, send the email; otherwise, log it
   if (process.env.NODE_ENV === 'production') {
     await transporter.sendMail(data);
   } else {
-    console.log(data);  // In development, log the data instead of sending
+    console.log(data);
   }
 };
 
