@@ -41,7 +41,7 @@ export const createWorkspace = async (creatorId, email, name, slug) => {
   });
   await sendMail({
     html: createHtml({ code: workspace.inviteCode, name }),
-    subject: `[Nextacular] Workspace created: ${name}`,
+    subject: `[AI Toolbox] Workspace created: ${name}`,
     text: createText({ code: workspace.inviteCode, name }),
     to: email,
   });
@@ -115,13 +115,13 @@ export const getSiteWorkspace = async (slug, customDomain) =>
         { slug },
         customDomain
           ? {
-              domains: {
-                some: {
-                  name: slug,
-                  deletedAt: null,
-                },
+            domains: {
+              some: {
+                name: slug,
+                deletedAt: null,
               },
-            }
+            },
+          }
           : undefined,
       ],
       AND: { deletedAt: null },
@@ -262,7 +262,7 @@ export const inviteUsers = async (id, email, members, slug) => {
       }),
       sendMail({
         html: inviteHtml({ code: workspace.inviteCode, name: workspace.name }),
-        subject: `[Nextacular] You have been invited to join ${workspace.name} workspace`,
+        subject: `[AI Toolbox] You have been invited to join ${workspace.name} workspace`,
         text: inviteText({ code: workspace.inviteCode, name: workspace.name }),
         to: members.map((member) => member.email),
       }),
