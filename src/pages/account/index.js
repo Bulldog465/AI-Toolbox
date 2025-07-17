@@ -65,7 +65,7 @@ const Welcome = () => {
 
   return (
     <AccountLayout>
-      <Meta title="Nextacular - Dashboard" />
+      <Meta title="AI Toolbox™ - Dashboard" />
       <Content.Title
         title={t('workspace.dashboard.header.title')}
         subtitle={t("workspace.dashboard.header.description")}
@@ -115,8 +115,7 @@ const Welcome = () => {
               <Card key={index}>
                 <Card.Body
                   title={invitation.workspace.name}
-                  subtitle={`You have been invited by ${invitation.invitedBy.name || invitation.invitedBy.email
-                    }`}
+                  subtitle={`You have been invited by ${invitation.invitedBy.name || invitation.invitedBy.email}`}
                 />
                 <Card.Footer>
                   <Button

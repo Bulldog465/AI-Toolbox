@@ -5,10 +5,8 @@ import { sendMail } from '@/lib/server/mail';  // Import sendMail function
 import { html, text } from '@/config/email-templates/signin';  // Use your HTML and text email templates
 
 export const authOptions = {
-  // Prisma Adapter for user management
   adapter: PrismaAdapter(prisma),
 
-  // Callbacks for session management
   callbacks: {
     session: async ({ session, user }) => {
       if (session.user) {
@@ -19,57 +17,49 @@ export const authOptions = {
           session.user.subscription = customerPayment.subscriptionType;
         }
       }
-
       return session;
     },
   },
 
-  // Debugging in non-production environments
   debug: !(process.env.NODE_ENV === 'production'),
 
-  // Events triggered on certain actions (e.g., on sign-in)
   events: {
     signIn: async ({ user, isNewUser }) => {
       const customerPayment = await getPayment(user.email);
-
       if (isNewUser || customerPayment === null || user.createdAt === null) {
         await Promise.all([createPaymentAccount(user.email, user.id)]);
       }
     },
   },
 
-  // Providers array for authentication
   providers: [
     EmailProvider({
-      from: process.env.EMAIL_FROM,  // Sender email
+      from: process.env.EMAIL_FROM,
       server: {
-        host: 'smtp.gmail.com',  // Ensure SMTP server is set
-        port: 587,  // Port for Gmail's SMTP (587 for TLS)
-        secure: false,  // Gmail uses TLS by default
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
         auth: {
-          user: process.env.EMAIL_SERVER_USER,  // Email username
-          pass: process.env.EMAIL_SERVER_PASSWORD,  // Email password or app-specific password
+          user: process.env.EMAIL_SERVER_USER,
+          pass: process.env.EMAIL_SERVER_PASSWORD,
         },
       },
       sendVerificationRequest: async ({ identifier: email, url }) => {
         const { host } = new URL(url);
 
-        // Use your existing sendMail function to send the magic link email
         await sendMail({
-          from: process.env.EMAIL_FROM,  // Use the email address from environment
-          to: email,  // Recipient email
-          subject: `[Nextacular] Sign in to ${host}`,
-          text: text({ email, url }),  // Use your text template
-          html: html({ email, url }),  // Use your HTML template
+          from: process.env.EMAIL_FROM,
+          to: email,
+          subject: `[AI Toolbox] Sign in to ${host}`,
+          text: text({ email, url }),
+          html: html({ email, url }),
         });
       },
     }),
   ],
 
-  // Secret for NextAuth session management
   secret: process.env.NEXTAUTH_SECRET || null,
 
-  // Session configuration using JWT
   session: {
     jwt: true,
   },

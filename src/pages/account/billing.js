@@ -40,7 +40,7 @@ const Billing = ({ invoices, products }) => {
 
   return (
     <AccountLayout>
-      <Meta title="Nextacular - Billing" />
+      <Meta title="AI Toolbox™ - Billing" />
       <Content.Title
         title="Billing"
         subtitle="Manage your billing and preferences"
@@ -50,7 +50,7 @@ const Billing = ({ invoices, products }) => {
         <Card>
           <Card.Body
             title="Upgrade Plan"
-            subtitle="You are currently under the&nbsp; FREE plan"
+            subtitle="You are currently under the FREE plan"
           >
             <p className="p-3 text-sm border rounded">
               Personal accounts cannot be upgraded and will remain free forever.
@@ -134,9 +134,7 @@ const Billing = ({ invoices, products }) => {
                     {formatDistance(
                       new Date(invoice.created * 1000),
                       new Date(),
-                      {
-                        addSuffix: true,
-                      }
+                      { addSuffix: true }
                     )}
                   </td>
                   <td className="py-5">{invoice.status}</td>
@@ -156,7 +154,7 @@ const Billing = ({ invoices, products }) => {
         </Content.Container>
       ) : (
         <Content.Empty>
-          Once you&apos;ve paid for something on Nextacular, invoices will show
+          Once you&apos;ve paid for something on AI Toolbox™, invoices will show
           up here
         </Content.Empty>
       )}

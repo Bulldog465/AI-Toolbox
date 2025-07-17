@@ -109,7 +109,7 @@ const Team = ({ isTeamOwner, workspace }) => {
 
   return (
     <AccountLayout>
-      <Meta title={`Nextacular - ${workspace.name} | Team Management`} />
+      <Meta title={`AI Toolbox™ - ${workspace.name} | Team Management`} />
       <Content.Title
         title={t("settings.team.management")}
         subtitle={t("settings.team.manage.members")}
@@ -250,8 +250,8 @@ const Team = ({ isTeamOwner, workspace }) => {
                               member.status === InvitationStatus.ACCEPTED
                                 ? 'bg-green-200 text-green-600'
                                 : member.status === InvitationStatus.PENDING
-                                ? 'bg-blue-200 text-blue-600'
-                                : 'bg-red-200 text-red-600',
+                                  ? 'bg-blue-200 text-blue-600'
+                                  : 'bg-red-200 text-red-600',
                             ].join(' ')}
                           >
                             {member.status.toLowerCase()}
@@ -344,9 +344,8 @@ export const getServerSideProps = async (context) => {
 
     if (workspace) {
       isTeamOwner = isWorkspaceOwner(session.user.email, workspace);
-      workspace.inviteLink = `${
-        process.env.APP_URL
-      }/teams/invite?code=${encodeURI(workspace.inviteCode)}`;
+      workspace.inviteLink = `${process.env.APP_URL
+        }/teams/invite?code=${encodeURI(workspace.inviteCode)}`;
     }
   }
 

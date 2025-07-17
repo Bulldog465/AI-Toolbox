@@ -29,76 +29,64 @@ const Settings = ({ user }) => {
 
   const copyToClipboard = () => toast.success('Copied to clipboard!');
 
-  const changeName = (event) => {
+  const changeName = async (event) => {
     event.preventDefault();
     setSubmittingState(true);
-    api('/api/user/name', {
+    const response = await api('/api/user/name', {
       body: { name },
       method: 'PUT',
-    }).then((response) => {
-      setSubmittingState(false);
-
-      if (response.errors) {
-        Object.keys(response.errors).forEach((error) =>
-          toast.error(response.errors[error].msg)
-        );
-      } else {
-        toast.success('Name successfully updated!');
-      }
     });
-  };
+    setSubmittingState(false);
 
-  const changeEmail = (event) => {
-    event.preventDefault();
-    const result = confirm(
-      'Are you sure you want to update your email address?'
-    );
-
-    if (result) {
-      setSubmittingState(true);
-      api('/api/user/email', {
-        body: { email },
-        method: 'PUT',
-      }).then((response) => {
-        setSubmittingState(false);
-
-        if (response.errors) {
-          Object.keys(response.errors).forEach((error) =>
-            toast.error(response.errors[error].msg)
-          );
-        } else {
-          toast.success('Email successfully updated and signing you out!');
-          setTimeout(() => signOut({ callbackUrl: '/auth/login' }), 2000);
-        }
-      });
+    if (response.errors) {
+      Object.values(response.errors).forEach(error =>
+        toast.error(error.msg)
+      );
+    } else {
+      toast.success('Name successfully updated!');
     }
   };
 
-  const deactivateAccount = (event) => {
+  const changeEmail = async (event) => {
     event.preventDefault();
-    setSubmittingState(true);
-    api('/api/user', {
-      method: 'DELETE',
-    }).then((response) => {
+    if (confirm('Are you sure you want to update your email address?')) {
+      setSubmittingState(true);
+      const response = await api('/api/user/email', {
+        body: { email },
+        method: 'PUT',
+      });
       setSubmittingState(false);
-      toggleModal();
 
       if (response.errors) {
-        Object.keys(response.errors).forEach((error) =>
-          toast.error(response.errors[error].msg)
+        Object.values(response.errors).forEach(error =>
+          toast.error(error.msg)
         );
       } else {
-        toast.success('Account has been deactivated!');
+        toast.success('Email successfully updated and signing you out!');
+        setTimeout(() => signOut({ callbackUrl: '/auth/login' }), 2000);
       }
-    });
+    }
   };
 
-  const handleEmailChange = (event) => setEmail(event.target.value);
+  const deactivateAccount = async (event) => {
+    event.preventDefault();
+    setSubmittingState(true);
+    const response = await api('/api/user', { method: 'DELETE' });
+    setSubmittingState(false);
+    toggleModal();
 
-  const handleNameChange = (event) => setName(event.target.value);
+    if (response.errors) {
+      Object.values(response.errors).forEach(error =>
+        toast.error(error.msg)
+      );
+    } else {
+      toast.success('Account has been deactivated!');
+    }
+  };
 
-  const handleVerifyEmailChange = (event) => setVerifyEmail(event.target.value);
-
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handleNameChange = (e) => setName(e.target.value);
+  const handleVerifyEmailChange = (e) => setVerifyEmail(e.target.value);
   const toggleModal = () => {
     setVerifyEmail('');
     setModalState(!showModal);
@@ -106,7 +94,7 @@ const Settings = ({ user }) => {
 
   return (
     <AccountLayout>
-      <Meta title="Nextacular - Account Settings" />
+      <Meta title="AI Toolbox™ - Account Settings" />
       <Content.Title
         title={t("settings.header.title")}
         subtitle={t("settings.header.description")}
@@ -139,6 +127,7 @@ const Settings = ({ user }) => {
             </Card.Footer>
           </form>
         </Card>
+
         <Card>
           <form>
             <Card.Body
@@ -165,6 +154,7 @@ const Settings = ({ user }) => {
             </Card.Footer>
           </form>
         </Card>
+
         <Card>
           <Card.Body
             title={t("settings.profile.personal.account.id")}
@@ -178,15 +168,14 @@ const Settings = ({ user }) => {
             </div>
           </Card.Body>
         </Card>
+
         <Card danger>
           <Card.Body
             title={t("settings.account.deactive.title")}
             subtitle={t("settings.account.deactive.description")}
           />
           <Card.Footer>
-            <small>
-              {t("settings.account.deactive.message")}
-            </small>
+            <small>{t("settings.account.deactive.message")}</small>
             <Button
               className="text-white bg-red-600 hover:bg-red-500"
               onClick={toggleModal}
@@ -194,14 +183,13 @@ const Settings = ({ user }) => {
               {t("settings.account.action.deactive.label")}
             </Button>
           </Card.Footer>
+
           <Modal
             show={showModal}
             title="Deactivate Personal Account"
             toggle={toggleModal}
           >
-            <p>
-              {t("settings.account.action.deactive.label")}
-            </p>
+            <p>{t("settings.account.action.deactive.label")}</p>
             <p className="px-3 py-2 text-red-600 border border-red-600 rounded">
               <strong>Warning:</strong> {t("settings.account.deactive.message")}
             </p>
@@ -238,11 +226,7 @@ export const getServerSideProps = async (context) => {
   const { email, name, userCode } = await getUser(session.user?.userId);
   return {
     props: {
-      user: {
-        email,
-        name,
-        userCode,
-      },
+      user: { email, name, userCode },
     },
   };
 };

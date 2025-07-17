@@ -9,16 +9,15 @@ const Payment = () => {
 
   return (
     <PublicLayout>
-      <Meta title="Nextacular - Subscription Status" />
+      <Meta title="AI Toolbox™ - Subscription Status" />
       <div className="w-full py-5">
         <div className="relative flex flex-col mx-auto space-y-5">
           <div className="flex flex-col items-center justify-center pt-10 pb-5 mx-auto">
             <h1 className="text-5xl font-bold text-center">
               <span className="block">Subscription Purchase:</span>
               <span
-                className={`block ${
-                  query.status === 'success' ? 'text-green-600' : 'text-red-600'
-                }`}
+                className={`block ${query.status === 'success' ? 'text-green-600' : 'text-red-600'
+                  }`}
               >
                 {query.status === 'success' ? 'Success' : 'Cancelled'}
               </span>

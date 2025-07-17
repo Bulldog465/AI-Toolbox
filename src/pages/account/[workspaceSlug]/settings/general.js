@@ -85,7 +85,7 @@ const General = ({ isTeamOwner, workspace }) => {
 
   return (
     <AccountLayout>
-      <Meta title={`Nextacular - ${workspace.name} | Settings`} />
+      <Meta title={`AI Toolbox™ - ${workspace.name} | Settings`} />
       <Content.Title
         title={t("settings.workspace.information")}
         subtitle={t("settings.general.workspace.description")}

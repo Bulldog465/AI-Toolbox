@@ -59,7 +59,7 @@ const Login = () => {
       <div className="flex flex-col items-center justify-center p-5 m-auto space-y-5 rounded shadow-lg md:p-10 md:w-1/3">
         <div>
           <Link href="/" className="text-4xl font-bold">
-            Nextacular
+            AI Toolbox™
           </Link>
         </div>
         <div className="text-center">

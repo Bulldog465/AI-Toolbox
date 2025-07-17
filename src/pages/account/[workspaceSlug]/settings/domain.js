@@ -90,7 +90,7 @@ const Domain = ({ isTeamOwner, workspace }) => {
 
   return (
     <AccountLayout>
-      <Meta title={`Nextacular - ${workspace.name} | Domains`} />
+      <Meta title={`AI Toolbox™ - ${workspace.name} | Domains`} />
       <Content.Title
         title={t("settings.domain.subdomain.management")}
         subtitle={t("settings.domain.subdomain.management.description")}
