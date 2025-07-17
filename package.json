@@ -1,7 +1,8 @@
 {
-  "name": "nextacular",
-  "version": "1.4.1-Beta",
+  "name": "ai-toolbox",
+  "version": "1.0.0",
   "private": true,
+  "description": "AI Toolbox™ - Multi-Tenant SaaS Starter Kit",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
