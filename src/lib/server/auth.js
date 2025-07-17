@@ -1,8 +1,11 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import EmailProvider from 'next-auth/providers/email';
 import prisma from '@/prisma/index';
-import { sendMail } from '@/lib/server/mail';  // Import sendMail function
-import { html, text } from '@/config/email-templates/signin';  // Use your HTML and text email templates
+import { sendMail } from '@/lib/server/mail';
+import { html, text } from '@/config/email-templates/signin';
+
+// ✅ Added imports for payment functions
+import { getPayment, createPaymentAccount } from '@/prisma/services/customer';
 
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
