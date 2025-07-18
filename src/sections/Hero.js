@@ -39,24 +39,24 @@ const Hero = () => {
               <a className="px-5 py-2 rounded hover:bg-gray-100">{t("common.label.blog")}</a>
             </nav>
             <Link
-              href={
-                sessionStatus === 'authenticated' ? '/account' : '/auth/login'
-              }
+              href={sessionStatus === 'authenticated' ? '/account' : '/auth/login'}
               className="w-full px-5 py-2 text-center text-white bg-blue-600 rounded shadow hover:bg-blue-500"
             >
               {sessionStatus === 'authenticated' ? 'Go to Dashboard' : 'Login'}
             </Link>
           </div>
         </header>
+
         <div className="flex flex-col items-center justify-center pt-10 mx-auto md:w-3/5">
-          <h1 className="text-6xl font-extrabold text-center">
-            <span className="block">Build SaaS platforms</span>
-            <span className="block text-blue-600">like never before</span>
+          <h1 className="text-4xl md:text-6xl font-extrabold text-center">
+            <span className="block">Simplify Workflows.</span>
+            <span className="block text-blue-600">Accelerate Growth.</span>
           </h1>
-          <p className="mt-5 text-center text-gray-600">
-            Quickly build landing pages that will help you get results fast
+          <p className="mt-5 text-center text-gray-600 text-lg md:text-xl">
+            AI Toolbox empowers service businesses to streamline operations, automate tasks, and scale faster — all without the tech headaches.
           </p>
         </div>
+
         <div className="flex items-center justify-center space-x-5">
           <a className="px-10 py-3 text-center text-white bg-blue-600 rounded shadow hover:bg-blue-500">
             Get Started
