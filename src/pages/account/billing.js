@@ -40,7 +40,7 @@ const Billing = ({ invoices, products }) => {
 
   return (
     <AccountLayout>
-      <Meta title="AI Toolbox™ - Billing" />
+      <Meta title="Billing | AI Toolbox™" />
       <Content.Title
         title="Billing"
         subtitle="Manage your billing and preferences"
@@ -164,11 +164,13 @@ const Billing = ({ invoices, products }) => {
 
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
-  const customerPayment = await getPayment(session.user?.email);
+  const customerPayment = await getPayment(session.user?.email); // Still using email to fetch customer
+
   const [invoices, products] = await Promise.all([
     getInvoices(customerPayment?.paymentId),
     getProducts(),
   ]);
+
   return {
     props: {
       invoices,
