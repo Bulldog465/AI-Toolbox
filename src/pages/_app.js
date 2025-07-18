@@ -13,18 +13,23 @@ import swrConfig from '@/config/swr/index';
 import WorkspaceProvider from '@/providers/workspace';
 
 import '@/styles/globals.css';
+
+// Initialize language data
 let rawdata = require('../messages/en.json');
+let langCode = "en";
 
-let langCode = "en"
-let langObject = {}
-langObject[langCode] = {}
+// Define langObject dynamically for easier expansion
+let langObject = {
+  [langCode]: {
+    translation: rawdata
+  }
+};
 
-langObject[langCode].translation = rawdata
 i18n
   .use(initReactI18next)
   .init({
     resources: langObject,
-    lng: "en",
+    lng: langCode,
     fallbackLng: "en",
     interpolation: {
       escapeValue: false
@@ -37,19 +42,28 @@ const App = ({ Component, pageProps }) => {
   const router = useRouter();
   const swrOptions = swrConfig();
 
+  // Handle page progress
   Router.events.on('routeChangeStart', () => setProgress(true));
   Router.events.on('routeChangeComplete', () => setProgress(false));
   TopBarProgress.config(progressBarConfig());
 
+  // Initialize Google Analytics in production
   useEffect(() => {
     if (process.env.NODE_ENV === 'production') {
-      ReactGA.initialize(process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID);
+      try {
+        ReactGA.initialize(process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID);
+      } catch (error) {
+        console.error('Error initializing ReactGA:', error);
+      }
     }
   }, []);
 
+  // Track page views with Google Analytics
   useEffect(() => {
     const handleRouteChange = (url) => {
-      ReactGA.pageview(url);
+      if (process.env.NODE_ENV === 'production') {
+        ReactGA.pageview(url);
+      }
     };
 
     router.events.on('routeChangeComplete', handleRouteChange);
