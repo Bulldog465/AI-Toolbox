@@ -53,8 +53,8 @@ const Login = () => {
   return (
     <AuthLayout>
       <Meta
-        title="NextJS SaaS Boilerplate | Login"
-        description="A boilerplate for your NextJS SaaS projects."
+        title="Login | AI Toolbox™ - Simplify Workflows & Accelerate Growth"
+        description="Login to AI Toolbox to streamline your business workflows, automate tasks, and scale faster with AI-powered tools."
       />
       <div className="flex flex-col items-center justify-center p-5 m-auto space-y-5 rounded shadow-lg md:p-10 md:w-1/3">
         <div>
