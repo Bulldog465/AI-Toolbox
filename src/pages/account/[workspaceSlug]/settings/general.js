@@ -58,7 +58,7 @@ const General = ({ isTeamOwner, workspace }) => {
       method: 'PUT',
     }).then((response) => {
       setSubmittingState(false);
-      const slug = response?.data?.slug;
+      const newSlug = response?.data?.slug;
 
       if (response.errors) {
         Object.keys(response.errors).forEach((error) =>
@@ -66,7 +66,7 @@ const General = ({ isTeamOwner, workspace }) => {
         );
       } else {
         toast.success('Workspace slug successfully updated!');
-        router.replace(`/account/${slug}/settings/general`);
+        router.replace(`/account/${newSlug}/settings/general`);
       }
     });
   };
@@ -74,7 +74,6 @@ const General = ({ isTeamOwner, workspace }) => {
   const copyToClipboard = () => toast.success('Copied to clipboard!');
 
   const handleNameChange = (event) => setName(event.target.value);
-
   const handleSlugChange = (event) => setSlug(event.target.value);
 
   useEffect(() => {
@@ -85,7 +84,7 @@ const General = ({ isTeamOwner, workspace }) => {
 
   return (
     <AccountLayout>
-      <Meta title={`AI Toolbox™ - ${workspace.name} | Settings`} />
+      <Meta title={`General Settings | ${workspace.name} | AI Toolbox™`} />
       <Content.Title
         title={t("settings.workspace.information")}
         subtitle={t("settings.general.workspace.description")}
@@ -118,6 +117,7 @@ const General = ({ isTeamOwner, workspace }) => {
             )}
           </Card.Footer>
         </Card>
+
         <Card>
           <Card.Body
             title={t("settings.workspace.slug")}
@@ -151,6 +151,7 @@ const General = ({ isTeamOwner, workspace }) => {
             )}
           </Card.Footer>
         </Card>
+
         <Card>
           <Card.Body
             title={t("settings.workspace.slug.validation.message")}
@@ -167,6 +168,7 @@ const General = ({ isTeamOwner, workspace }) => {
             </div>
           </Card.Body>
         </Card>
+
       </Content.Container>
     </AccountLayout>
   );
@@ -179,7 +181,7 @@ export const getServerSideProps = async (context) => {
 
   if (session) {
     workspace = await getWorkspace(
-      session.user.userId,
+      session.user.id,
       session.user.email,
       context.params.workspaceSlug
     );
