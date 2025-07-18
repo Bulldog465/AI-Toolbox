@@ -9,7 +9,7 @@ const Payment = () => {
 
   return (
     <PublicLayout>
-      <Meta title="AI Toolbox™ - Subscription Status" />
+      <Meta title="Subscription Status | AI Toolbox™" />
       <div className="w-full py-5">
         <div className="relative flex flex-col mx-auto space-y-5">
           <div className="flex flex-col items-center justify-center pt-10 pb-5 mx-auto">
