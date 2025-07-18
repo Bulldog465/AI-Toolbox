@@ -16,25 +16,31 @@ const Site = ({ workspace }) => {
     return <h1>Loading...</h1>;
   }
 
+  const pageTitle = workspace
+    ? `${workspace.name} | AI Toolbox™ Workspace`
+    : 'Workspace | AI Toolbox™';
+
   return workspace ? (
-    <main className="relative flex flex-col items-center justify-center h-screen space-y-10 text-gray-800 bg-gray-50">
-      <Meta title={workspace.name} />
-      <div className="flex flex-col items-center justify-center p-10 space-y-5 text-center ">
+    <main className="relative flex flex-col items-center justify-center min-h-screen space-y-10 text-gray-800 bg-gray-50">
+      <Meta title={pageTitle} />
+      <div className="flex flex-col items-center justify-center p-10 space-y-5 text-center">
         <h1 className="text-4xl font-bold">
-          Welcome to your workspace&apos;s subdomain!
+          Welcome to your AI Toolbox™ workspace subdomain!
         </h1>
         <h2 className="text-2xl">
-          This is the workspace of <strong>{workspace.name}.</strong>
+          This workspace belongs to <strong>{workspace.name}</strong>.
         </h2>
-        <p>You can also visit these links:</p>
+        <p>Quick links to access:</p>
+
         <Link
           href={`https://${workspace.hostname}`}
           className="flex space-x-3 text-blue-600 hover:underline"
           target="_blank"
         >
-          <span>{`${workspace.hostname}`}</span>
+          <span>{workspace.hostname}</span>
           <ArrowTopRightOnSquareIcon className="w-5 h-5" />
         </Link>
+
         {workspace.domains.map((domain, index) => (
           <Link
             key={index}
@@ -50,7 +56,7 @@ const Site = ({ workspace }) => {
     </main>
   ) : (
     <>
-      <Meta noIndex />
+      <Meta title="Workspace Not Found | AI Toolbox™" noIndex />
       <DefaultErrorPage statusCode={404} />
     </>
   );
