@@ -17,70 +17,55 @@ import { useTranslation } from "react-i18next";
 
 const Settings = ({ user }) => {
   const [email, setEmail] = useState(user.email || '');
-  const [isSubmitting, setSubmittingState] = useState(false);
   const [name, setName] = useState(user.name || '');
-  const [showModal, setModalState] = useState(false);
   const [userCode] = useState(user.userCode);
   const [verifyEmail, setVerifyEmail] = useState('');
+  const [isSubmitting, setSubmittingState] = useState(false);
+  const [showModal, setModalState] = useState(false);
+  const { t } = useTranslation();
+
   const validName = name.length > 0 && name.length <= 32;
   const validEmail = isEmail(email);
-  const { t } = useTranslation();
   const verifiedEmail = verifyEmail === email;
 
   const copyToClipboard = () => toast.success('Copied to clipboard!');
 
-  const changeName = async (event) => {
-    event.preventDefault();
+  const changeName = async (e) => {
+    e.preventDefault();
     setSubmittingState(true);
-    const response = await api('/api/user/name', {
-      body: { name },
-      method: 'PUT',
-    });
+    const response = await api('/api/user/name', { body: { name }, method: 'PUT' });
     setSubmittingState(false);
 
-    if (response.errors) {
-      Object.values(response.errors).forEach(error => toast.error(error.msg));
-    } else {
-      toast.success('Name successfully updated!');
-    }
+    response.errors
+      ? Object.values(response.errors).forEach(error => toast.error(error.msg))
+      : toast.success('Name successfully updated!');
   };
 
-  const changeEmail = async (event) => {
-    event.preventDefault();
+  const changeEmail = async (e) => {
+    e.preventDefault();
     if (confirm('Are you sure you want to update your email address?')) {
       setSubmittingState(true);
-      const response = await api('/api/user/email', {
-        body: { email },
-        method: 'PUT',
-      });
+      const response = await api('/api/user/email', { body: { email }, method: 'PUT' });
       setSubmittingState(false);
 
-      if (response.errors) {
-        Object.values(response.errors).forEach(error => toast.error(error.msg));
-      } else {
-        toast.success('Email successfully updated and signing you out!');
-        setTimeout(() => signOut({ callbackUrl: '/auth/login' }), 2000);
-      }
+      response.errors
+        ? Object.values(response.errors).forEach(error => toast.error(error.msg))
+        : (toast.success('Email successfully updated. Logging out...'), setTimeout(() => signOut({ callbackUrl: '/auth/login' }), 2000));
     }
   };
 
-  const deactivateAccount = async (event) => {
-    event.preventDefault();
+  const deactivateAccount = async (e) => {
+    e.preventDefault();
     setSubmittingState(true);
     const response = await api('/api/user', { method: 'DELETE' });
     setSubmittingState(false);
     toggleModal();
 
-    if (response.errors) {
-      Object.values(response.errors).forEach(error => toast.error(error.msg));
-    } else {
-      toast.success('Account has been deactivated!');
-    }
+    response.errors
+      ? Object.values(response.errors).forEach(error => toast.error(error.msg))
+      : toast.success('Account has been deactivated!');
   };
 
-  const handleEmailChange = (e) => setEmail(e.target.value);
-  const handleNameChange = (e) => setName(e.target.value);
-  const handleVerifyEmailChange = (e) => setVerifyEmail(e.target.value);
   const toggleModal = () => {
     setVerifyEmail('');
     setModalState(!showModal);
@@ -88,7 +73,7 @@ const Settings = ({ user }) => {
 
   return (
     <AccountLayout>
-      <Meta title="AI Toolbox™ - Account Settings" />
+      <Meta title="Account Settings | AI Toolbox™" />
       <Content.Title
         title={t("settings.header.title")}
         subtitle={t("settings.header.description")}
@@ -98,17 +83,16 @@ const Settings = ({ user }) => {
 
         <Card>
           <form>
-            <Card.Body title={t("settings.profile.name")} subtitle="Please enter your full name, or a display name you are comfortable with">
+            <Card.Body title={t("settings.profile.name")} subtitle="Enter your full name or display name.">
               <input
                 className="px-3 py-2 border rounded md:w-1/2"
                 disabled={isSubmitting}
-                onChange={handleNameChange}
-                type="text"
+                onChange={(e) => setName(e.target.value)}
                 value={name}
+                type="text"
               />
             </Card.Body>
             <Card.Footer>
-              <small>{t("settings.profile.name.validation.message")}</small>
               <Button
                 className="text-white bg-blue-600 hover:bg-blue-500"
                 disabled={!validName || isSubmitting}
@@ -126,13 +110,12 @@ const Settings = ({ user }) => {
               <input
                 className="px-3 py-2 border rounded md:w-1/2"
                 disabled={isSubmitting}
-                onChange={handleEmailChange}
-                type="email"
+                onChange={(e) => setEmail(e.target.value)}
                 value={email}
+                type="email"
               />
             </Card.Body>
             <Card.Footer>
-              <small>{t("settings.profile.email.message")}</small>
               <Button
                 className="text-white bg-blue-600 hover:bg-blue-500"
                 disabled={!validEmail || isSubmitting}
@@ -146,9 +129,9 @@ const Settings = ({ user }) => {
 
         <Card>
           <Card.Body title={t("settings.profile.personal.account.id")} subtitle={t("settings.profile.personal.account.message")}>
-            <div className="flex items-center justify-between px-3 py-2 space-x-5 font-mono text-sm border rounded md:w-1/2">
-              <span className="overflow-x-auto">{userCode}</span>
-              <CopyToClipboard onCopy={copyToClipboard} text={userCode}>
+            <div className="flex items-center justify-between px-3 py-2 font-mono text-sm border rounded md:w-1/2">
+              <span>{userCode}</span>
+              <CopyToClipboard text={userCode} onCopy={copyToClipboard}>
                 <DocumentDuplicateIcon className="w-5 h-5 cursor-pointer hover:text-blue-600" />
               </CopyToClipboard>
             </div>
@@ -158,7 +141,6 @@ const Settings = ({ user }) => {
         <Card danger>
           <Card.Body title={t("settings.account.deactive.title")} subtitle={t("settings.account.deactive.description")} />
           <Card.Footer>
-            <small>{t("settings.account.deactive.message")}</small>
             <Button
               className="text-white bg-red-600 hover:bg-red-500"
               onClick={toggleModal}
@@ -167,32 +149,22 @@ const Settings = ({ user }) => {
             </Button>
           </Card.Footer>
 
-          <Modal show={showModal} title="Deactivate Personal Account" toggle={toggleModal}>
-            <p>{t("settings.account.action.deactive.label")}</p>
-            <p className="px-3 py-2 text-red-600 border border-red-600 rounded">
-              <strong>Warning:</strong> {t("settings.account.deactive.message")}
-            </p>
-            <div className="flex flex-col">
-              <label className="text-sm text-gray-400">
-                Enter <strong>{user.email}</strong> to continue:
-              </label>
-              <input
-                className="px-3 py-2 border rounded"
-                disabled={isSubmitting}
-                onChange={handleVerifyEmailChange}
-                type="email"
-                value={verifyEmail}
-              />
-            </div>
-            <div className="flex flex-col items-stretch">
-              <Button
-                className="text-white bg-red-600 hover:bg-red-500"
-                disabled={!verifiedEmail || isSubmitting}
-                onClick={deactivateAccount}
-              >
-                <span>{t("settings.account.action.deactive.label")}</span>
-              </Button>
-            </div>
+          <Modal show={showModal} title="Deactivate Account" toggle={toggleModal}>
+            <p>Type your email to confirm deactivation:</p>
+            <input
+              className="px-3 py-2 my-2 border rounded"
+              disabled={isSubmitting}
+              onChange={(e) => setVerifyEmail(e.target.value)}
+              value={verifyEmail}
+              type="email"
+            />
+            <Button
+              className="text-white bg-red-600 hover:bg-red-500"
+              disabled={!verifiedEmail || isSubmitting}
+              onClick={deactivateAccount}
+            >
+              Confirm Deactivation
+            </Button>
           </Modal>
         </Card>
 
@@ -204,27 +176,19 @@ const Settings = ({ user }) => {
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
 
-  if (!session || !session.user?.id) {
-    return {
-      redirect: { destination: '/login', permanent: false },
-    };
+  if (!session?.user?.id) {
+    return { redirect: { destination: '/login', permanent: false } };
   }
 
   const userData = await getUser(session.user.id);
 
   if (!userData) {
-    return {
-      notFound: true,
-    };
+    return { notFound: true };
   }
 
   const { email, name, userCode } = userData;
 
-  return {
-    props: {
-      user: { email, name, userCode },
-    },
-  };
+  return { props: { user: { email, name, userCode } } };
 };
 
 export default Settings;
