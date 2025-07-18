@@ -14,10 +14,8 @@ import { useTranslation } from "react-i18next";
 
 const Welcome = () => {
   const router = useRouter();
-  const { data: invitationsData, isLoading: isFetchingInvitations } =
-    useInvitations();
-  const { data: workspacesData, isLoading: isFetchingWorkspaces } =
-    useWorkspaces();
+  const { data: invitationsData, isLoading: isFetchingInvitations } = useInvitations();
+  const { data: workspacesData, isLoading: isFetchingWorkspaces } = useWorkspaces();
   const { setWorkspace } = useWorkspace();
   const { t } = useTranslation();
   const [isSubmitting, setSubmittingState] = useState(false);
@@ -31,8 +29,8 @@ const Welcome = () => {
       setSubmittingState(false);
 
       if (response.errors) {
-        Object.keys(response.errors).forEach((error) =>
-          toast.error(response.errors[error].msg)
+        Object.values(response.errors).forEach((error) =>
+          toast.error(error.msg)
         );
       } else {
         toast.success('Accepted invitation!');
@@ -49,8 +47,8 @@ const Welcome = () => {
       setSubmittingState(false);
 
       if (response.errors) {
-        Object.keys(response.errors).forEach((error) =>
-          toast.error(response.errors[error].msg)
+        Object.values(response.errors).forEach((error) =>
+          toast.error(error.msg)
         );
       } else {
         toast.success('Declined invitation!');
@@ -65,10 +63,10 @@ const Welcome = () => {
 
   return (
     <AccountLayout>
-      <Meta title="AI Toolbox™ - Dashboard" />
+      <Meta title="Welcome Dashboard | AI Toolbox™" />
       <Content.Title
         title={t('workspace.dashboard.header.title')}
-        subtitle={t("workspace.dashboard.header.description")}
+        subtitle={t('workspace.dashboard.header.description')}
       />
       <Content.Divider />
       <Content.Container>
@@ -97,10 +95,12 @@ const Welcome = () => {
           )}
         </div>
       </Content.Container>
+
       <Content.Divider thick />
+
       <Content.Title
-        title={t("workspace.dashboard.header.invitations.title")}
-        subtitle={t("workspace.dashboard.header.invitations.description")}
+        title={t('workspace.dashboard.header.invitations.title')}
+        subtitle={t('workspace.dashboard.header.invitations.description')}
       />
       <Content.Divider />
       <Content.Container>
@@ -137,7 +137,7 @@ const Welcome = () => {
             ))
           ) : (
             <Card.Empty>
-              {t("workspace.team.invitations.empty.message")}
+              {t('workspace.team.invitations.empty.message')}
             </Card.Empty>
           )}
         </div>
