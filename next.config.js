@@ -1,6 +1,6 @@
 module.exports = {
-  images: {
-    domains: ['ai-toolbox.io'],
-  },
   reactStrictMode: true,
+  images: {
+    domains: ['ai-toolbox.io'], // Allow images from ai-toolbox.io domain
+  },
 };
