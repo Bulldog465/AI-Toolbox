@@ -53,7 +53,7 @@ const Advanced = ({ isCreator }) => {
 
   return (
     <AccountLayout>
-      <Meta title={`AI Toolbox™ - ${workspace?.name} | Advanced Settings`} />
+      <Meta title={`Advanced Settings | ${workspace?.name || 'Workspace'} | AI Toolbox™`} />
       <Content.Title
         title={t("settings.workspace.advanced")}
         subtitle={t("settings.workspace.manage.label")}
@@ -87,13 +87,8 @@ const Advanced = ({ isCreator }) => {
             toggle={toggleModal}
           >
             <p className="flex flex-col">
-              <span>
-                {t("settings.workspace.delete.data.warning")}
-              </span>
-              <span>
-                Data associated with this workspace can&apos;t be accessed by
-                team members.
-              </span>
+              <span>{t("settings.workspace.delete.data.warning")}</span>
+              <span>Data associated with this workspace can&apos;t be accessed by team members.</span>
             </p>
             <p className="px-3 py-2 text-red-600 border border-red-600 rounded">
               <strong>Warning:</strong> {t("settings.workspace.delete.final.message")}
@@ -106,7 +101,7 @@ const Advanced = ({ isCreator }) => {
                 className="px-3 py-2 border rounded"
                 disabled={isSubmitting}
                 onChange={handleVerifyWorkspaceChange}
-                type="email"
+                type="text"
                 value={verifyWorkspace}
               />
             </div>
@@ -132,11 +127,11 @@ export const getServerSideProps = async (context) => {
 
   if (session) {
     const workspace = await getWorkspace(
-      session.user.userId,
+      session.user.id,   // <-- changed to .id for consistency
       session.user.email,
       context.params.workspaceSlug
     );
-    isCreator = isWorkspaceCreator(session.user.userId, workspace.creatorId);
+    isCreator = isWorkspaceCreator(session.user.id, workspace?.creatorId);
   }
 
   return { props: { isCreator } };
