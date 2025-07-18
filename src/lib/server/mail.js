@@ -2,9 +2,9 @@ import nodemailer from 'nodemailer';
 
 // Nodemailer SMTP transporter configuration
 export const emailConfig = {
-  host: process.env.EMAIL_SERVICE || 'smtp.gmail.com',
-  port: Number(process.env.EMAIL_PORT) || 587,
-  secure: Number(process.env.EMAIL_PORT) === 465, // true if port 465, false otherwise
+  host: process.env.EMAIL_SERVICE || 'smtp.zoho.com',
+  port: Number(process.env.EMAIL_PORT) || 465, // Default to Zoho's SSL port
+  secure: true, // Zoho requires SSL on port 465
   auth: {
     user: process.env.EMAIL_SERVER_USER,
     pass: process.env.EMAIL_SERVER_PASSWORD,
