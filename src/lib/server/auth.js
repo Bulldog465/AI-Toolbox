@@ -4,7 +4,6 @@ import prisma from '@/prisma/index';
 import { sendMail } from '@/lib/server/mail';
 import { html, text } from '@/config/email-templates/signin';
 
-// ✅ Added imports for payment functions
 import { getPayment, createPaymentAccount } from '@/prisma/services/customer';
 
 export const authOptions = {
@@ -24,7 +23,7 @@ export const authOptions = {
     },
   },
 
-  debug: !(process.env.NODE_ENV === 'production'),
+  debug: process.env.NODE_ENV !== 'production',
 
   events: {
     signIn: async ({ user, isNewUser }) => {
@@ -39,9 +38,9 @@ export const authOptions = {
     EmailProvider({
       from: process.env.EMAIL_FROM,
       server: {
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure: false,
+        host: process.env.EMAIL_SERVER,
+        port: Number(process.env.EMAIL_SERVER_PORT),
+        secure: Number(process.env.EMAIL_SERVER_PORT) === 465, // SSL if port is 465
         auth: {
           user: process.env.EMAIL_SERVER_USER,
           pass: process.env.EMAIL_SERVER_PASSWORD,
