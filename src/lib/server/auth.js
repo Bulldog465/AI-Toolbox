@@ -29,7 +29,7 @@ export const authOptions = {
     signIn: async ({ user, isNewUser }) => {
       const customerPayment = await getPayment(user.email);
       if (isNewUser || customerPayment === null || user.createdAt === null) {
-        await Promise.all([createPaymentAccount(user.email, user.id)]);
+        await createPaymentAccount(user.email, user.id);
       }
     },
   },
@@ -40,7 +40,7 @@ export const authOptions = {
       server: {
         host: process.env.EMAIL_SERVER,
         port: Number(process.env.EMAIL_SERVER_PORT),
-        secure: Number(process.env.EMAIL_SERVER_PORT) === 465, // SSL if port is 465
+        secure: Number(process.env.EMAIL_SERVER_PORT) === 465, // true if port is 465
         auth: {
           user: process.env.EMAIL_SERVER_USER,
           pass: process.env.EMAIL_SERVER_PASSWORD,
@@ -60,9 +60,9 @@ export const authOptions = {
     }),
   ],
 
-  secret: process.env.NEXTAUTH_SECRET || null,
+  secret: process.env.NEXTAUTH_SECRET,
 
   session: {
-    jwt: true,
+    strategy: 'jwt',
   },
 };
