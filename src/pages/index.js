@@ -14,8 +14,8 @@ const Home = () => {
   return (
     <LandingLayout>
       <Meta
-        title="NextJS SaaS Boilerplate"
-        description="A boilerplate for your NextJS SaaS projects."
+        title="AI Toolbox | Simplify Workflows & Accelerate Growth"
+        description="AI Toolbox empowers service businesses to streamline operations, automate tasks, and scale faster — all without the tech headaches."
       />
       <Hero />
       <Features />
