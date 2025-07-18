@@ -39,9 +39,7 @@ const Settings = ({ user }) => {
     setSubmittingState(false);
 
     if (response.errors) {
-      Object.values(response.errors).forEach(error =>
-        toast.error(error.msg)
-      );
+      Object.values(response.errors).forEach(error => toast.error(error.msg));
     } else {
       toast.success('Name successfully updated!');
     }
@@ -58,9 +56,7 @@ const Settings = ({ user }) => {
       setSubmittingState(false);
 
       if (response.errors) {
-        Object.values(response.errors).forEach(error =>
-          toast.error(error.msg)
-        );
+        Object.values(response.errors).forEach(error => toast.error(error.msg));
       } else {
         toast.success('Email successfully updated and signing you out!');
         setTimeout(() => signOut({ callbackUrl: '/auth/login' }), 2000);
@@ -76,9 +72,7 @@ const Settings = ({ user }) => {
     toggleModal();
 
     if (response.errors) {
-      Object.values(response.errors).forEach(error =>
-        toast.error(error.msg)
-      );
+      Object.values(response.errors).forEach(error => toast.error(error.msg));
     } else {
       toast.success('Account has been deactivated!');
     }
@@ -101,12 +95,10 @@ const Settings = ({ user }) => {
       />
       <Content.Divider />
       <Content.Container>
+
         <Card>
           <form>
-            <Card.Body
-              title={t("settings.profile.name")}
-              subtitle="Please enter your full name, or a display name you are comfortable with"
-            >
+            <Card.Body title={t("settings.profile.name")} subtitle="Please enter your full name, or a display name you are comfortable with">
               <input
                 className="px-3 py-2 border rounded md:w-1/2"
                 disabled={isSubmitting}
@@ -130,10 +122,7 @@ const Settings = ({ user }) => {
 
         <Card>
           <form>
-            <Card.Body
-              title={t("settings.profile.email.label")}
-              subtitle={t("settings.profile.email.description")}
-            >
+            <Card.Body title={t("settings.profile.email.label")} subtitle={t("settings.profile.email.description")}>
               <input
                 className="px-3 py-2 border rounded md:w-1/2"
                 disabled={isSubmitting}
@@ -156,10 +145,7 @@ const Settings = ({ user }) => {
         </Card>
 
         <Card>
-          <Card.Body
-            title={t("settings.profile.personal.account.id")}
-            subtitle={t("settings.profile.personal.account.message")}
-          >
+          <Card.Body title={t("settings.profile.personal.account.id")} subtitle={t("settings.profile.personal.account.message")}>
             <div className="flex items-center justify-between px-3 py-2 space-x-5 font-mono text-sm border rounded md:w-1/2">
               <span className="overflow-x-auto">{userCode}</span>
               <CopyToClipboard onCopy={copyToClipboard} text={userCode}>
@@ -170,10 +156,7 @@ const Settings = ({ user }) => {
         </Card>
 
         <Card danger>
-          <Card.Body
-            title={t("settings.account.deactive.title")}
-            subtitle={t("settings.account.deactive.description")}
-          />
+          <Card.Body title={t("settings.account.deactive.title")} subtitle={t("settings.account.deactive.description")} />
           <Card.Footer>
             <small>{t("settings.account.deactive.message")}</small>
             <Button
@@ -184,11 +167,7 @@ const Settings = ({ user }) => {
             </Button>
           </Card.Footer>
 
-          <Modal
-            show={showModal}
-            title="Deactivate Personal Account"
-            toggle={toggleModal}
-          >
+          <Modal show={showModal} title="Deactivate Personal Account" toggle={toggleModal}>
             <p>{t("settings.account.action.deactive.label")}</p>
             <p className="px-3 py-2 text-red-600 border border-red-600 rounded">
               <strong>Warning:</strong> {t("settings.account.deactive.message")}
@@ -216,6 +195,7 @@ const Settings = ({ user }) => {
             </div>
           </Modal>
         </Card>
+
       </Content.Container>
     </AccountLayout>
   );
@@ -223,7 +203,23 @@ const Settings = ({ user }) => {
 
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
-  const { email, name, userCode } = await getUser(session.user?.userId);
+
+  if (!session || !session.user?.id) {
+    return {
+      redirect: { destination: '/login', permanent: false },
+    };
+  }
+
+  const userData = await getUser(session.user.id);
+
+  if (!userData) {
+    return {
+      notFound: true,
+    };
+  }
+
+  const { email, name, userCode } = userData;
+
   return {
     props: {
       user: { email, name, userCode },

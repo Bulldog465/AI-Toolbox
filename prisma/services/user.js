@@ -8,8 +8,10 @@ export const deactivate = async (id) =>
     where: { id },
   });
 
-export const getUser = async (id) =>
-  await prisma.user.findUnique({
+export const getUser = async (id) => {
+  if (!id) return null;  // Prevent query if id is undefined or null
+
+  return await prisma.user.findUnique({
     select: {
       email: true,
       name: true,
@@ -17,6 +19,7 @@ export const getUser = async (id) =>
     },
     where: { id },
   });
+};
 
 export const updateEmail = async (id, email, previousEmail) => {
   await prisma.user.update({
