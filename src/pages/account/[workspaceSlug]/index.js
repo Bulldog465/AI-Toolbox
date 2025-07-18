@@ -9,10 +9,10 @@ const Workspace = () => {
   return (
     workspace && (
       <AccountLayout>
-        <Meta title={`AI Toolbox™ - ${workspace.name} | Dashboard`} />
+        <Meta title={`Dashboard | ${workspace.name} | AI Toolbox™`} />
         <Content.Title
           title={workspace.name}
-          subtitle="This is your project's workspace"
+          subtitle="This is your project's workspace dashboard"
         />
         <Content.Divider />
         <Content.Container />
